@@ -6,8 +6,6 @@ var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 1234;
 
-var Client = require('node-rest-client').Client
-
 app.get("/", function (req, res) {
     res.redirect("index.html");
 });
