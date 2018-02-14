@@ -4,10 +4,12 @@
   <script src='jquery-3.3.1.min.js'></script>
   <script>	  
 function sendToServer(){
-	var url = "./eval?";
+	//need to define "eq" textarea as variable or implement into url somehow
+	var inputData = document.getElementById("eq").value;
+	var url = "./eval?" + inputData;
 	loadFile(url, function(resData){
 		$("#result").val(resData);
-	});
+});
   // complete this function.
   //  you can use loadFile()
 }
