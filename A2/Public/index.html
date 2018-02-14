@@ -4,9 +4,9 @@
   <script src='jquery-3.3.1.min.js'></script>
   <script>	  
 function sendToServer(){
-	var url = "./eval?r"
+	var url = "./eval?"
 	loadFile(url, function(resData){
-		$("#r").val(resData);
+		$("#result").val(resData);
 	});
   // complete this function.
   //  you can use loadFile()
@@ -19,6 +19,7 @@ function sendToServer(){
 	<h1> Eval </h1>
   <textarea id='eq'></textarea>
   <button onclick='sendToServer()'> Evaluate </button>
-  <textarea id='r'></textarea>
+  <div id='result'> </div>
+  <textarea id='result'></textarea>
 </body>
 </html>
