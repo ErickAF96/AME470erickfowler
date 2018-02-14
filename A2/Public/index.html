@@ -12,7 +12,7 @@
 	  
 function sendToServer(){
 	//need to define "eq" textarea as variable or implement into url somehow
-	var inputData = $("#eq").val(resData);
+	var inputData = $("#eq").val();
 	var url = "./eval?" + equation;
 	loadFile(url, function(resData){
 		$("#result").val(resData);
