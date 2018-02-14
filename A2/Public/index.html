@@ -5,8 +5,7 @@
   <script>
 
 function sendToServer(){
-	//need to define "eq" textarea as variable or implement into url somehow
-	var url = "./eval?eq=" + encodeURIComponent($("#eq").val());
+	var url = "./eval?eq=" + encodeURIComponent($("#eq").val()); //need to implement "eq" textarea into url
 	console.log(url);
 	loadFile(url, function(resData){
 		$("#result").html(resData);
