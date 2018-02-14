@@ -4,7 +4,7 @@
   <script src='jquery-3.3.1.min.js'></script>
   <script>	  
 function sendToServer(){
-	var url = "./eval"
+	var url = "./eval?eq=resData"
 	loadFile(url, function(resData){
 		$("#r").val(resData);
 	});
