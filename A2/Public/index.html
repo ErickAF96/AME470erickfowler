@@ -13,10 +13,8 @@
 function sendToServer(){
 	//need to define "eq" textarea as variable or implement into url somehow
 	var inputData = $("#eq").val();
-// 	encodeURIComponent("inputData")
 	var url = "./eval?" + inputData;
 	loadFile(url, function(inputData, resData){
-// 		decodeURICompontent("inputData")
 		$("#result").val(resData);
 });
   // complete this function.
