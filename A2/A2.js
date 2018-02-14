@@ -21,7 +21,7 @@ app.get("/eval", function (req, res) {
 
 app.use(methodOverride());
 app.use(bodyParser());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/Public'));
 app.use(errorHandler());
 
 console.log("Simple static server listening at http://" + hostname + ":" + port);
