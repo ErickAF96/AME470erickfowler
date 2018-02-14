@@ -8,6 +8,7 @@ function sendToServer(){
 	var inputData = document.getElementById("eq").value;
 	var url = "./eval?" + inputData;
 	loadFile(url, function(resData){
+		JSON.parse(inputData)
 		$("#result").val(resData);
 });
   // complete this function.
