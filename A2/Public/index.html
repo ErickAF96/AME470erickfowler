@@ -7,8 +7,7 @@ function sendToServer(){
 	//need to define "eq" textarea as variable or implement into url somehow
 	var inputData = document.getElementById("eq").value;
 	var url = "./eval?" + inputData;
-	loadFile(url, function(resData){
-		JSON.parse(inputData)
+	loadFile(url, function(inputData, resData){
 		$("#result").val(resData);
 });
   // complete this function.
