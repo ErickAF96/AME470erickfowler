@@ -5,7 +5,8 @@
   <script>	  
 function sendToServer(){
 	var url = "./eval"
-	loadFile(url, function(r){
+	loadFile(url, function(eq,r){
+		$("#eq").val(eq);
 		$("#result").val(r);
 	});
   // complete this function.
