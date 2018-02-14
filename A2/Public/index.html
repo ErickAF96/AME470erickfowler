@@ -2,12 +2,19 @@
 <head>
   <script src='asyncReq.js'></script>
   <script src='jquery-3.3.1.min.js'></script>
-  <script>	  
+  <script>
+	  
+// function getDataFromServer(){
+//     //var URL = r
+//     loadFile(url, function(resData){
+//       $(“#result”).val(resData)
+//   });	    
+	  
 function sendToServer(){
 	//need to define "eq" textarea as variable or implement into url somehow
-	var inputData = document.getElementById("eq").value;
-	var url = "./eval?" + inputData;
-	loadFile(url, function(inputData, resData){
+	var inputData = $("#eq").val(resData);
+	var url = "./eval?" + equation;
+	loadFile(url, function(resData){
 		$("#result").val(resData);
 });
   // complete this function.
