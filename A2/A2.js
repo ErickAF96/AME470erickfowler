@@ -9,7 +9,7 @@ var port = 1234;
 var Client = require('node-rest-client').Client
 
 app.get("/", function (req, res) {
-    res.redirect("index.html")
+    res.redirect("index.html");
 });
 
 app.get("/eval", function (req, res) {
