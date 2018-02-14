@@ -12,10 +12,10 @@ app.get("/", function (req, res) {
 
 app.get("/eval", function (req, res) {
     var eq = req.query.eq;
-    
+ 
 	var r = eq + " = " + eval(eq) + "\n";
 	res.writeHead(200, {'Content-Type': 'text/plain'});
-	res.end(r);
+	res.end(r.toString());
 });
 
 
