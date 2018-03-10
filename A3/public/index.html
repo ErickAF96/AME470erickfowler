@@ -6,16 +6,26 @@
     #rssBox{
 	  text-align: center;
 	  font-family: Helvetica, sans-serif;
-      float:center;
+      float: center;
       width: 100%;
       min-height: 25%;
-      background: gray;
+      background: lightgray;	
     } 
+	
+	button{
+		background-color: orange;
+		cursor: pointer;
+		border: none;
+		font-weight: bold;
+		font-size: 16px;
+	}
+	
     #theDetails{
       float:center;
       width: 100%;
       min-height: 75%;
     }
+	
   </style>
   <script>
   function getDataFromServer(){
@@ -58,9 +68,12 @@
 <div id='rssBox'>
 	<h1> RSS Reader </h1>
   <button onclick='changeRSSSrc()'> Edit </button>
-  <div id='theList'></div>
+  
 </div>
-<div id='theDetails'></div>
+
+<div id='theDetails'>
+<div id='theList'></div>
+</div>
 
 </body>
 </html>
