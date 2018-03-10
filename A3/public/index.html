@@ -1,43 +1,4 @@
-<html>
-<head>
-  <script src='asyncReq.js'></script>
-  <script src='jquery-3.3.1.min.js'></script>
-  <style>
-    #rssBox{
-	  text-align: center;
-	  font-family: Helvetica, sans-serif;
-      float: center;
-      width: 100%;
-      min-height: 25%;
-      background: lightgray;	
-    } 
-	
-	button{
-		background-color: orange;
-		cursor: pointer;
-		border: none;
-		font-weight: bold;
-		font-size: 16px;
-	}
-	
-	#theList{
-		background-color: lightgray;
-	}
-	
-    #theDetails{
-      float:center;
-      width: 100%;
-      min-height: 75%;
-    }
-	
-  </style>
-  <script>
-  function getDataFromServer(){
-    //var url = "./eval?eq=34-4*45";
-    var url = "https://rss.itunes.apple.com/api/v1/us/apple-music/hot-tracks/all/10/explicit.json";
-    loadFile(url, function(resData){
-      $("#result").val(resData);
-    });
+<div id='theList'></div>
   }
   var currRSSData = null;
   function changeRSSSrc()
