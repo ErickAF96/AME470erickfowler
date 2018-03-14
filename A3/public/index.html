@@ -80,17 +80,32 @@
 	
   </style>
   <script>
-  function getDataFromServer(){
+	  
+  function getDataFromServer() {
     var url = "https://rss.itunes.apple.com/api/v1/us/apple-music/hot-tracks/all/10/explicit.json";
     loadFile(url, function(resData){
       $("#result").val(resData);
     });
   }
+  
   var currRSSData = null;
-  function changeRSSSrc()
-  {
-    var feedURL = prompt("Enter your RSS feed URL:");
-    var url = "./getFeedData?url=" + feedURL;
+  
+  function changeRSSSrc() {
+    var url = "./getFeedData?url=" + (window.location.hash.replace("#",""));
+    $(document).ready(function(){
+        loadRSS(url);
+    });
+}
+	function buttonCall() {
+    var txt;
+    var inputUrl = prompt("Enter your RSS feed URL:");
+	var url = "./getFeedData?url=" + inputUrl;
+    $(document).ready(function(){
+        loadRSS(url);
+    });
+	
+}
+	function loadRSS(url) {
     loadFile(url, function(resData){
       currRSSData = JSON.parse(resData).feed.results;
       var markup = "";
@@ -104,34 +119,36 @@
       $("#theList").html(markup);
     });
   }
-  function itemSelected(n)
-  {
+  
+  function itemSelected(n) {
 	var markup = "";
     var data = currRSSData[n];
-    var thumbDetailed = data.artworkUrl100;
-    var nameDetailed = data.name;
-	var nameUrl = data.url;
+    var thumbDetailed = data.artworkUrl100 || "";
+    var nameDetailed = data.name || "";
+	var nameUrl = data.url || "";
     var artistDetailed = data.artistName;
 	var artistUrl = data.artistUrl;
 	
-    markup += "<img src='" + thumbDetailed + "'><h1>" + nameDetailed + "</h1><h2>" + artistDetailed + "</h2>";
+    markup += "<img src='" + thumbDetailed + "'>";
+	markup += "<a href='" + nameUrl + "'><h1>" + nameDetailed + "</h1></a>";
+	markup += "<a href='" + artistUrl + "'><h2>" + artistDetailed + "</h2></a>";
 	
     $("#theDetails").html(markup);
+	//document.getElementById("theDetails").innerHTML = markup;
   }
   </script>
 
 </head>
 
-<body>
+<body onload='changeRSSSrc()'>
 <div id='rssBox'>
 	<h1> RSS Reader </h1>
-  <button onclick='changeRSSSrc()'> Edit </button>
+  	<button onclick='buttonCall()'> Edit </button>
 </div>
 
 <div id='theList'></div>
 
-<div id='theDetails'>
-</div>
+<div id='theDetails'></div>
 
 </body>
 </html>
