@@ -159,21 +159,21 @@
       });
     }
 	
-    // function loadImage(url){
-    //   console.log(url);
-    //   loadFile(url, function(resData){
-    //     var markup = resData;
-    //     // var markup = "";
-    //     for(var i = 0; i < currImage.length; i++){
-    //       var entry = currImage[i];
-    //       var thumb = entry.url;
-    //       var name = entry.name;
-    //       markup += "<button onclick='imgSelected(" + i + ")'><img src='" + thumb + "'><h1>" + name + "</h1><h2>" + thumb + "<h2></button>";
-    //     }
-    //     $("#theImageList").html(markup);
-    //     ac.hide();
-    //   });
-    // }
+    function loadImage(url){
+      console.log(url);
+      loadFile(url, function(resData){
+        var markup = resData;
+        // var markup = "";
+        for(var i = 0; i < currImage.length; i++){
+          var entry = currImage[i];
+          var thumb = entry.url;
+          var name = entry.name;
+          markup += "<button onclick='imgSelected(" + i + ")'><img src='" + thumb + "'><h1>" + name + "</h1><h2>" + thumb + "<h2></button>";
+        }
+        $("#theImageList").html(markup);
+        ac.hide();
+      });
+    }
   
     function imgSelected(n) {
       $("#theImageList button").removeClass("active");
