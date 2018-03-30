@@ -1,0 +1,237 @@
+<html>
+<head>
+  <script src='asyncReq.js'></script>
+  <script src='jquery-3.3.1.min.js'></script>
+  <script src='ac.js'></script>
+  <link rel="stylesheet" type="text/css" href="ac.css">
+  <style>
+    #allImagesWrapper{
+	  display: flex;
+	  text-align: center;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-family: Helvetica, sans-serif;
+      float: center;
+      width: 100%;
+      height: 25%;
+      background: bisque;	
+    }
+	
+	#allImagesWrapper button{
+		background-color: paleturquoise;
+		border-radius: 8px;
+		cursor: pointer;
+		border: none;
+		font-weight: bold;
+		font-size: 16px;
+	}
+	
+	#theImageList{
+		height:55%;
+		display: flex;
+		flex-wrap: wrap;
+	    align-content: space-between;
+	}
+	
+	#theImageList button{
+		background: transparent;
+		border: transparent;
+		align-content: left;
+		text-align: left;
+		width:150px;
+		height:150px;
+	}
+	
+	#theImageList h1{
+		font-size: 14px;
+		font-weight: 100;
+	}
+	
+	#theImageList h2{
+		font-size: 10px;
+		font-weight: 100;
+	}
+	
+	#theImageList img{
+		border: 1px solid lightgrey;
+		height:100px;
+		width:100px;
+	}
+	
+    #theDetails{
+	  display: -webkit-flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-family:helvetica, sans-serif;
+      width: 100%;
+      height: 25%;
+    }
+	#theDetails img{
+		height:100px;
+		width:100px;
+	}
+	#theDetails h1{
+		font-size: 14px;
+	}
+	
+	#theDetails h2{
+		font-size: 10px;
+	}
+	
+  </style>
+  <script>
+	  
+	  function renameClicked(n){
+		  var currName = currImageList[n].name;
+	      var id = currImageList[n].id;
+	      var x = prompt("Rename Image", currName);
+	      console.log(x);
+	      if(x){
+	        var url = "./renameImg?name=" + encodeURIComponent(x);
+	        url += "&id=" + id;
+	        loadFile(url, function(resData){
+	            start();
+	        });
+	      }
+	    }
+		
+	    function deleteClicked(n){
+			var id = currImageList[n].id;
+			var x = confirm("Delete Image?");
+			if(x){
+				var url = "./deleteImg?id=" + id;
+				loadFile(url, function(resData){
+	            start();
+	        	});
+	      	}
+	    }
+		
+		function getDataFromServer() {
+			var url = "https://cdn.pixabay.com/photo/2016/03/28/12/35/cat-1285634_1280.png";
+			loadFile(url, function(resData){
+				$("#result").val(resData);
+			});
+		}
+  
+	var currImage = null;
+	
+	function imageSelected(n) {
+		ac.show();
+		var imageURL = currImageList[n].url;
+   	 	var url = "./getImage?url=" + imageURL;
+    	loadImage(url);
+   	 	$("#theImageList .item").removeClass("active");
+    	$("#theImageList .item:nth-of-type(" + (n+1) + ")").addClass("active");
+  	}
+	
+    function addImgSrc() {
+      var imageURL = prompt("Enter new image URL:");
+      var url = "./addImg?url=" + imageURL;
+      url += "&date=" + new Date().getTime();
+      url += "&name=Untitled";
+      url += "&id=test" + new Date().getTime();
+      loadFile(url, function(resData){
+          start();
+      })
+    }
+  	
+	function start() {
+      ac.show();
+      var url = "./getAllImgs";
+      loadFile(url, function(resData){
+        console.log(resData);
+         var allImages = JSON.parse(resData);
+         currImageList = allImages;
+          if(allImages.length == 0){
+            document.getElementById("theImageList").innerHTML = "No images yet! Add some to start!!"
+          }
+          else{
+            var markup = "";
+            for(var i = 0; i < allImages.length; i++){
+              markup += "<div class='item'>";
+                markup += "<button onclick='imgSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1><h2>" + allImages[i].url + "<h2></button>";
+                markup += '<a href="javascript:renameClicked(' + i + ')"> Rename </a>';
+                markup += '<a href="javascript:deleteClicked(' + i + ')"> Delete </a>';
+                markup += "</div>";
+            }
+            $("#theImageList").html(markup);
+          }     
+          ac.hide();
+      });
+    }
+  
+    function itemSelected(n)
+    {
+      $("#theImageList button").removeClass("active");
+      $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
+      var data = currImage[n];
+      var markup = "";
+      var thumbnail = data.url || "";
+      var name = data.name || "";
+      var link = data.url || "";
+      console.log(data);
+      markup += "<img src='" + thumbnail + "'>";
+      markup += "<a target='_blank' href='" + link + "'><h1>" + name + "</h1></a>";
+      $("#theDetails").html(markup);
+    }
+  
+  // function changeImageSrc() {
+//     var url = "./getImage?url=" + (window.location.hash.replace("#",""));
+//     $(document).ready(function(){
+//         loadImage(url);
+//     });
+// }
+// 	function buttonCall() {
+//     var txt;
+//     var inputUrl = prompt("Enter your image URL:");
+// 	var url = "./getImage?url=" + inputUrl;
+//     $(document).ready(function(){
+//         loadFile(url, function(resData){
+// 	        var markup = "";
+// 	        // for(var i = 0; i < currRSSData.length; i++){
+// 	          // var entry = currImage;
+// 	          markup += "<button onclick='itemSelected()'><img src='" + inputUrl + "'>";
+// 	        // }
+// 	        $("#theList").html(markup);
+//         })
+//     });
+//
+// }
+// 	function loadImage(url) {
+// 	console.log(url)
+//     loadFile(url, function(resData){
+//       var markup = "";
+//       // for(var i = 0; i < currRSSData.length; i++){
+//         // var entry = currImage;
+//         markup += "<button onclick='itemSelected()'><img src='" + url + "'>";
+//       // }
+//       $("#theList").html(markup);
+//     });
+//   }
+//
+//   function itemSelected() {
+// 	var markup = "";
+//     var data = currImage;
+//     var thumbDetailed = data || "";
+//
+//     markup += "<img src='" + thumbDetailed + "'>";
+//     $("#theDetails").html(markup);
+// 	//document.getElementById("theDetails").innerHTML = markup;
+//   }
+  </script>
+  </head>
+  
+  <body onload='start()'>
+  <div id='allImagesWrapper'>
+  	<h1> Image Viewer </h1>
+    	<button onclick='addImgSrc()'> Add </button>
+  </div>
+
+  <div id='theImageList'></div>
+
+  <div id='theDetails'></div>
+
+  </body>
+  </html>
