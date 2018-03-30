@@ -68,10 +68,7 @@
       width: 100%;
       height: 25%;
     }
-	#theDetails img{
-		height:100px;
-		width:100px;
-	}
+	
 	#theDetails h1{
 		font-size: 14px;
 	}
@@ -162,18 +159,16 @@
       });
     }
   
-    function itemSelected(n)
-    {
+    function itemSelected(n) {
       $("#theImageList button").removeClass("active");
       $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
       var data = currImage[n];
       var markup = "";
       var thumbnail = data.url || "";
       var name = data.name || "";
-      var link = data.url || "";
       console.log(data);
       markup += "<img src='" + thumbnail + "'>";
-      markup += "<a target='_blank' href='" + link + "'><h1>" + name + "</h1></a>";
+      markup += "<a target='_blank' href='" + thumbnail + "'><h1>" + name + "</h1></a>";
       $("#theDetails").html(markup);
     }
   
