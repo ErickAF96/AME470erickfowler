@@ -148,7 +148,7 @@
             var markup = "";
             for(var i = 0; i < allImages.length; i++){
               markup += "<div class='item'>";
-                markup += "<button onclick='imgSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1><h2>" + allImages[i].url + "<h2></button>";
+                markup += "<button onclick='imageSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1><h2>" + allImages[i].url + "<h2></button>";
                 markup += '<a href="javascript:renameClicked(' + i + ')"> Rename </a>';
                 markup += '<a href="javascript:deleteClicked(' + i + ')"> Delete </a>';
                 markup += "</div>";
@@ -156,6 +156,23 @@
             $("#theImageList").html(markup);
           }     
           ac.hide();
+      });
+    }
+	
+    function loadImage(url){
+      console.log(url);
+      loadFile(url, function(resData){
+        currImage = resData.image.results;
+        //var markup = resData;
+        var markup = "";
+        for(var i = 0; i < currImage.length; i++){
+          var entry = currImage[i];
+          var thumb = entry.url;
+          var name = entry.name;
+          markup += "<button onclick='imgSelected(" + i + ")'><img src='" + thumb + "'><h1>" + name + "</h1><h2>" + thumb + "<h2></button>";
+        }
+        $("#theImageList").html(markup);
+        ac.hide();
       });
     }
   
