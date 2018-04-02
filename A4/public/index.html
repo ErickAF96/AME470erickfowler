@@ -27,14 +27,14 @@
 		font-size: 16px;
 	}
 	
-	#theImageList{
+	#theImageList {
 		height:55%;
 		display: flex;
 		flex-wrap: wrap;
 	    align-content: space-between;
 	}
 	
-	#theImageList button{
+	#theImageList button {
 		background: transparent;
 		border: transparent;
 		align-content: left;
@@ -43,39 +43,38 @@
 		height:150px;
 	}
 	
-	#theImageList h1{
+	#theImageList .item {
+	    padding: 10px;
+	    display: grid;
+	    align-content: start;
+	}
+	
+	#theImageList h1 {
 		font-size: 14px;
 		font-weight: 100;
 	}
 	
-	#theImageList h2{
-		font-size: 10px;
-		font-weight: 100;
-	}
-	
-	#theImageList img{
-		border: 1px solid lightgrey;
+	#theImageList img {
+		border-radius: 8px;
 		height:100px;
 		width:100px;
 	}
 	
+	#theImageList a {
+		color: black;
+		font-family: Helvetica, sans-serif;
+		font-size: 10px;
+		font-weight: 100;
+	}
+	
     #theDetails{
-	  display: -webkit-flex;
-	  flex-direction: column;
+	  font-family:helvetica, sans-serif;
+	  display: grid;
 	  justify-content: center;
 	  align-items: center;
-	  font-family:helvetica, sans-serif;
       width: 100%;
       height: 25%;
     }
-	
-	#theDetails h1{
-		font-size: 14px;
-	}
-	
-	#theDetails h2{
-		font-size: 10px;
-	}
 	
   </style>
   <script>
@@ -106,22 +105,13 @@
 	    }
 		
 		function getDataFromServer() {
-			var url = "https://cdn.pixabay.com/photo/2016/03/28/12/35/cat-1285634_1280.png";
+			var url = "";
 			loadFile(url, function(resData){
 				$("#result").val(resData);
 			});
 		}
   
 	var currImage = null;
-	
-	function imageSelected(n) {
-		ac.show();
-		var imageURL = currImageList[n].url;
-   	 	var url = "./getImage?url=" + imageURL;
-    	loadImage(url);
-   	 	$("#theImageList .item").removeClass("active");
-    	$("#theImageList .item:nth-of-type(" + (n+1) + ")").addClass("active");
-  	}
 	
     function addImgSrc() {
       var imageURL = prompt("Enter new image URL:");
@@ -148,7 +138,7 @@
             var markup = "";
             for(var i = 0; i < allImages.length; i++){
               markup += "<div class='item'>";
-                markup += "<button onclick='imageSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1><h2>" + allImages[i].url + "<h2></button>";
+                markup += "<button onclick='imgSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1></button>";
                 markup += '<a href="javascript:renameClicked(' + i + ')"> Rename </a>';
                 markup += '<a href="javascript:deleteClicked(' + i + ')"> Delete </a>';
                 markup += "</div>";
@@ -158,80 +148,21 @@
           ac.hide();
       });
     }
-	
-    function loadImage(url){
-      console.log(url);
-      loadFile(url, function(resData){
-		var currImage = JSON.parse(resData).image.results
-        var markup = resData;
-        // var markup = "";
-        for(var i = 0; i < currImage.length; i++){
-          var entry = currImage[i];
-          var thumb = entry.url;
-          var name = entry.name;
-          markup += "<button onclick='imgSelected(" + i + ")'><img src='" + thumb + "'><h1>" + name + "</h1><h2>" + thumb + "<h2></button>";
-        }
-        $("#theImageList").html(markup);
-        ac.hide();
-      });
-    }
   
     function imgSelected(n) {
       $("#theImageList button").removeClass("active");
       $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
-      var data = currImage[n];
+      var data = currImageList[n];
       var markup = "";
       var thumbnail = data.url || "";
-      var name = data.name || "";
+      var imageURL = data.name || "";
+	  var url = "./getImage?url=" + imageURL;
       console.log(data);
+	  
       markup += "<img src='" + thumbnail + "'>";
-      markup += "<a target='_blank' href='" + thumbnail + "'><h1>" + name + "</h1></a>";
-      $("#theDetails").html(markup);
+	  $("#theDetails").html(markup);
     }
   
-  // function changeImageSrc() {
-//     var url = "./getImage?url=" + (window.location.hash.replace("#",""));
-//     $(document).ready(function(){
-//         loadImage(url);
-//     });
-// }
-// 	function buttonCall() {
-//     var txt;
-//     var inputUrl = prompt("Enter your image URL:");
-// 	var url = "./getImage?url=" + inputUrl;
-//     $(document).ready(function(){
-//         loadFile(url, function(resData){
-// 	        var markup = "";
-// 	        // for(var i = 0; i < currRSSData.length; i++){
-// 	          // var entry = currImage;
-// 	          markup += "<button onclick='itemSelected()'><img src='" + inputUrl + "'>";
-// 	        // }
-// 	        $("#theList").html(markup);
-//         })
-//     });
-//
-// }
-// 	function loadImage(url) {
-// 	console.log(url)
-//     loadFile(url, function(resData){
-//       var markup = "";
-//       // for(var i = 0; i < currRSSData.length; i++){
-//         // var entry = currImage;
-//         markup += "<button onclick='itemSelected()'><img src='" + url + "'>";
-//       // }
-//       $("#theList").html(markup);
-//     });
-//   }
-//
-//   function itemSelected() {
-// 	var markup = "";
-//     var data = currImage;
-//     var thumbDetailed = data || "";
-//
-//     markup += "<img src='" + thumbDetailed + "'>";
-//     $("#theDetails").html(markup);
-// 	//document.getElementById("theDetails").innerHTML = markup;
-//   }
   </script>
   </head>
   
