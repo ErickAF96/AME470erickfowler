@@ -16,11 +16,11 @@ app.get("/", function (req, res) {
 });
 
 app.get("/getImage", function (req, res) {
-  var url = req.url;
-  var client = new Client();
-  client.get(url, function (data, response) {
-    res.end(data); // send response body
-  });
+	var data = req.query;
+	  var id = data.id;
+	  db.collection("img").findOne({id:id}, function(err, result){
+	        res.end(JSON.stringify(result));
+	  });
 });
 
 app.get("/getAllImgs", function (req, res) {
