@@ -1,0 +1,319 @@
+<html>
+<head>
+  <script src='asyncReq.js'></script>
+  <script src='jquery-3.3.1.min.js'></script>
+  <script src='ac.js'></script>
+  <link rel="stylesheet" type="text/css" href="ac.css">
+  <style>
+	  
+    #allImagesWrapper{
+	  display: flex;
+	  text-align: center;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-family: Helvetica, sans-serif;
+      float: center;
+      width: 100%;
+      height: 25%;
+      background: bisque;	
+    }
+	
+	#allImagesWrapper button{
+		background-color: paleturquoise;
+		border-radius: 8px;
+		cursor: pointer;
+		border: none;
+		font-weight: bold;
+		font-size: 16px;
+	}
+	
+	#theImageList {
+		height: 30%;
+		display: flex;
+		flex-wrap: wrap;
+	    align-content: space-between;
+		padding: 30px;
+	}
+	
+	#theImageList button {
+		background: transparent;
+		border: transparent;
+		align-content: left;
+		text-align: left;
+		width:150px;
+		height:150px;
+	}
+	
+	#theImageList .item {
+	    padding: 10px;
+	    display: grid;
+	    align-content: start;
+	}
+	
+	#theImageList h1 {
+		font-size: 14px;
+		font-weight: 100;
+	}
+	
+	#theImageList img {
+		border-radius: 8px;
+		height:100px;
+		width:100px;
+	}
+	
+	#theImageList a {
+		color: black;
+		font-family: Helvetica, sans-serif;
+		font-size: 10px;
+		font-weight: 100;
+	}
+	
+    #theDetails{
+	  font-family:helvetica, sans-serif;
+	  display: grid;
+	  justify-content: center;
+	  align-items: center;
+      width: 100%;
+	  height: auto;
+	  overflow: auto;
+    }
+	
+  </style>
+  <script>
+
+
+	  function renameClicked(n){
+		  var currName = currImageList[n].name;
+	      var id = currImageList[n].id;
+	      var x = prompt("Rename Image", currName);
+	      console.log(x);
+	      if(x){
+	        var url = "./renameImg?name=" + encodeURIComponent(x);
+	        url += "&id=" + id;
+	        loadFile(url, function(resData){
+	            start();
+	        });
+	      }
+	    }
+		
+	    function deleteClicked(n){
+			var id = currImageList[n].id;
+			var x = confirm("Delete Image?");
+			if(x){
+				var url = "./deleteImg?id=" + id;
+				loadFile(url, function(resData){
+	            start();
+	        	});
+	      	}
+	    }
+		
+		function getDataFromServer() {
+			var url = "";
+			loadFile(url, function(resData){
+				$("#result").val(resData);
+			});
+		}
+  
+	var currImage = null;
+	
+    function addImgSrc() {
+      var imageURL = prompt("Enter new image URL:");
+      var url = "./addImg?url=" + imageURL;
+      url += "&date=" + new Date().getTime();
+      url += "&name=Untitled";
+      url += "&id=test" + new Date().getTime();
+      loadFile(url, function(resData){
+          start();
+      });
+    }
+  	
+	function start() {
+      ac.show();
+      var url = "./getAllImgs";
+      loadFile(url, function(resData){
+        console.log(resData);
+         var allImages = JSON.parse(resData);
+         currImageList = allImages;
+          if(allImages.length == 0){
+            document.getElementById("theImageList").innerHTML = "No images yet! Add some to start!!"
+          }
+          else{
+            var markup = "";
+            for(var i = 0; i < allImages.length; i++){
+              markup += "<div class='item'>";
+                markup += "<button onclick='imgSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1></button>";
+                markup += '<a href="javascript:renameClicked(' + i + ')"> Rename </a>';
+                markup += '<a href="javascript:deleteClicked(' + i + ')"> Delete </a>';
+                markup += "</div>";
+            }
+            $("#theImageList").html(markup);
+          }     
+          ac.hide();
+      });
+    }
+  
+    function imgSelected(n) {
+      $("#theImageList button").removeClass("active");
+      $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
+      var data = currImageList[n];
+      var markup = "";
+      var thumbnail = data.url || "";
+      var imageURL = data.name || "";
+	  var url = "./getImage?url=" + imageURL;
+      console.log(data);
+      
+	  saveFilter(n);
+      loadFilter(n);
+	  
+      markup += "<img src='" + thumbnail + "'>";
+	  $("#theDetails").html(markup);
+    }
+	
+	
+	
+	function resetFilters() {
+        document.getElementById("blur").value = "0";
+        document.getElementById("brightness").value = "100";
+        document.getElementById("contrast").value = "100";
+        document.getElementById("grayscale").value = "0";
+        document.getElementById("hueRotate").value = "0";
+        document.getElementById("invert").value = "0";
+        document.getElementById("opacity").value = "100";
+        document.getElementById("saturate").value = "100";
+        document.getElementById("sepia").value = "0";
+        applyFilter();
+  }
+	
+	function applyFilter() {
+        var blur = document.getElementById("blur").value + "px";
+        var brightness = document.getElementById("brightness").value + "%";
+        var contrast = document.getElementById("contrast").value + "%";
+        var grayscale = document.getElementById("grayscale").value + "%";
+        var hueRotate = document.getElementById("hueRotate").value + "deg";
+        var invert = document.getElementById("invert").value + "%";
+        var opacity = document.getElementById("opacity").value + "%";
+        var saturate = document.getElementById("saturate").value + "%";
+        var sepia = document.getElementById("sepia").value + "%";
+		
+		
+        var filter = " blur(" + blur + ") ";
+        filter += " brightness(" + brightness + ") ";
+        filter += " contrast(" + contrast + ") ";
+        filter += " grayscale(" + grayscale + ") ";
+        filter += " hue-rotate(" + hueRotate + ") ";
+        filter += " invert(" + invert + ") ";
+        filter += " opacity(" + opacity + ") ";
+        filter += " saturate(" + saturate + ") ";
+        filter += " sepia(" + sepia + ") ";
+        document.getElementById("theDetails").style.filter = filter;
+
+    }
+	
+	
+	function saveFilter(n) {
+		
+        var id = currImageList[n].id;
+        var url = "./imgFilter";
+        url += "&id=" + id;
+		
+		currImageList[n].blur = document.getElementById("blur").value;
+		currImageList[n].brightness = document.getElementById("brightness").value;
+		currImageList[n].contrast = document.getElementById("contrast").value;
+		currImageList[n].grayscale = document.getElementById("grayscale").value;
+		currImageList[n].hueRotate = document.getElementById("hueRotate").value;
+		currImageList[n].invert = document.getElementById("invert").value;
+		currImageList[n].opacity = document.getElementById("opacity").value;
+		currImageList[n].saturate = document.getElementById("saturate").value;
+		currImageList[n].sepia = document.getElementById("blur").sepia;
+		
+	}
+	
+	function loadFilter(n) {
+		
+      var id = currImageList[n].id;
+      var url = "./imgFilter";
+      url += "&id=" + id;
+	  
+	  
+
+	  var currBlur = currImageList[n].blur
+	  var currBrightness = currImageList[n].brightness
+	  var currContrast = currImageList[n].contrast
+	  var currGrayscale = currImageList[n].grayscale
+	  var currHueRotate = currImageList[n].hueRotate
+	  var currInvert = currImageList[n].invert
+	  var currOpacity = currImageList[n].opacity
+	  var currSaturate = currImageList[n].saturate
+	  var currSepia = currImageList[n].sepia
+	  
+	  document.getElementById("blur").value = currBlur;
+	  document.getElementById("brightness").value = currBrightness;
+ 	  document.getElementById("contrast").value = currContrast;
+ 	  document.getElementById("grayscale").value = currGrayscale;
+	  document.getElementById("hueRotate").value = currHueRotate;
+	  document.getElementById("invert").value = currInvert;
+	  document.getElementById("opacity").value = currOpacity;
+	  document.getElementById("saturate").value = currSaturate;
+	  document.getElementById("sepia").value = currSepia;
+	  
+      var filter = " blur(" + currBlur + ") ";
+      filter += " brightness(" + currBrightness + ") ";
+      filter += " contrast(" + currContrast + ") ";
+      filter += " grayscale(" + currGrayscale + ") ";
+      filter += " hue-rotate(" + currHueRotate + ") ";
+      filter += " invert(" + currInvert + ") ";
+      filter += " opacity(" + currOpacity + ") ";
+      filter += " saturate(" + currSaturate + ") ";
+      filter += " sepia(" + currSepia + ") ";
+      document.getElementById("theDetails").style.filter = filter;
+	  
+	  applyFilter();
+      }
+  
+  </script>
+  </head>
+  
+  <body onload='start()'>
+  <div id='allImagesWrapper'>
+  	<h1> Image Viewer </h1>
+    	<button onclick='addImgSrc()'> Add </button>
+  </div>
+
+  <div id='theImageList'></div>
+
+  <div id='theDetails'></div>
+  
+  <div id='theInspector'>
+	<br>
+	  <label for='blur'> Blur </label>
+	  <input onchange='applyFilter()' id='blur' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='brightness'> Brightness </label>
+	  <input onchange='applyFilter()' id='brightness' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='contrast'> Contrast </label>
+	  <input onchange='applyFilter()' id='contrast' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='grayscale'> Grayscale</label>
+	  <input onchange='applyFilter()' id='grayscale' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='hueRotate'> Hue Rotate</label>
+	  <input onchange='applyFilter()' id='hueRotate' value="0" type="range" min="0" max="360">
+	  <br>
+	  <label for='invert'> Invert </label>
+	  <input onchange='applyFilter()' id='invert' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='opacity'> Opacity </label>
+	  <input onchange='applyFilter()' id='opacity' value="100" type="range" min="0" max="100">
+	  <br>
+	  <label for='saturate'> Saturate</label>
+	  <input onchange='applyFilter()' id='saturate' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='sepia'> Sepia </label>
+	  <input onchange='applyFilter()' id='sepia' value="0" type="range" min="0" max="100">
+	  <button onclick='resetFilters()'> Reset </button>
+  </div>
+
+  </body>
+  </html>
