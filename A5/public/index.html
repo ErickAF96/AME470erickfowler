@@ -81,14 +81,15 @@
 	
   </style>
   <script>
-
+	  
+	  var currImage = null;
 
 	  function renameClicked(n){
 		  var currName = currImageList[n].name;
 	      var id = currImageList[n].id;
 	      var x = prompt("Rename Image", currName);
 	      console.log(x);
-	      if(x){
+	      if(x) {
 	        var url = "./renameImg?name=" + encodeURIComponent(x);
 	        url += "&id=" + id;
 	        loadFile(url, function(resData){
@@ -114,8 +115,6 @@
 				$("#result").val(resData);
 			});
 		}
-  
-	var currImage = null;
 	
     function addImgSrc() {
       var imageURL = prompt("Enter new image URL:");
@@ -152,10 +151,11 @@
           ac.hide();
       });
     }
-  
+	var currSelection;
     function imgSelected(n) {
       $("#theImageList button").removeClass("active");
       $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
+	  currSelection = n;
       var data = currImageList[n];
       var markup = "";
       var thumbnail = data.url || "";
@@ -163,14 +163,12 @@
 	  var url = "./getImage?url=" + imageURL;
       console.log(data);
       
-	  saveFilter(n);
+	  // saveFilter(n);
       loadFilter(n);
 	  
       markup += "<img src='" + thumbnail + "'>";
 	  $("#theDetails").html(markup);
     }
-	
-	
 	
 	function resetFilters() {
         document.getElementById("blur").value = "0";
@@ -186,6 +184,7 @@
   }
 	
 	function applyFilter() {
+		
         var blur = document.getElementById("blur").value + "px";
         var brightness = document.getElementById("brightness").value + "%";
         var contrast = document.getElementById("contrast").value + "%";
@@ -207,68 +206,99 @@
         filter += " saturate(" + saturate + ") ";
         filter += " sepia(" + sepia + ") ";
         document.getElementById("theDetails").style.filter = filter;
-
+		
+		var n = currSelection;
+		
+		currImageList[n].blur = parseInt(blur);
+		currImageList[n].brightness = parseInt(brightness);
+		currImageList[n].contrast = parseInt(contrast);
+		currImageList[n].grayscale = parseInt(grayscale);
+		currImageList[n].hueRotate = parseInt(hueRotate);
+		currImageList[n].invert = parseInt(invert);
+		currImageList[n].opacity = parseInt(opacity);
+		currImageList[n].saturate = parseInt(saturate);
+		currImageList[n].sepia = parseInt(sepia);
+		
+		var id = currImageList[n].id;
+	 	var blur = currImageList[n].blur
+		var url = "./imgFilter?id=" + id
+		+ "&blur=" + parseInt(blur);
+		+ "&brightness=" + parseInt(brightness);
+		+ "&contrast=" + parseInt(contrast);
+		+ "&grayscale=" + parseInt(grayscale);
+		+ "&hueRotate=" + parseInt(hueRotate);
+		+ "&invert=" + parseInt(invert);
+		+ "&opacity=" + parseInt(opacity);
+		+ "&saturate=" + parseInt(saturate);
+		+ "&sepia=" + parseInt(sepia);
+		
+        loadFile(url, function(resData){
+          
+        }); 
     }
 	
 	
-	function saveFilter(n) {
-		
-        var id = currImageList[n].id;
-        var url = "./imgFilter";
-        url += "&id=" + id;
-		
-		currImageList[n].blur = document.getElementById("blur").value;
-		currImageList[n].brightness = document.getElementById("brightness").value;
-		currImageList[n].contrast = document.getElementById("contrast").value;
-		currImageList[n].grayscale = document.getElementById("grayscale").value;
-		currImageList[n].hueRotate = document.getElementById("hueRotate").value;
-		currImageList[n].invert = document.getElementById("invert").value;
-		currImageList[n].opacity = document.getElementById("opacity").value;
-		currImageList[n].saturate = document.getElementById("saturate").value;
-		currImageList[n].sepia = document.getElementById("blur").sepia;
-		
-	}
+	// function saveFilter(n) {
+	//
+	//         var id = currImageList[n].id;
+	// 	var blur = currImageList[n].blur
+	//         var url = "./imgFilter";
+	//         url += "&id=" + id;
+	// 	url += "&blur=" + blur;
+	//
+	// 	currImageList[n].blur = document.getElementById("blur").value;
+	// 	currImageList[n].brightness = document.getElementById("brightness").value;
+	// 	currImageList[n].contrast = document.getElementById("contrast").value;
+	// 	currImageList[n].grayscale = document.getElementById("grayscale").value;
+	// 	currImageList[n].hueRotate = document.getElementById("hueRotate").value;
+	// 	currImageList[n].invert = document.getElementById("invert").value;
+	// 	currImageList[n].opacity = document.getElementById("opacity").value;
+	// 	currImageList[n].saturate = document.getElementById("saturate").value;
+	// 	currImageList[n].sepia = document.getElementById("blur").sepia;
+	//
+	// }
 	
 	function loadFilter(n) {
 		
+	  var obj = currImageList[n];
       var id = currImageList[n].id;
-      var url = "./imgFilter";
-      url += "&id=" + id;
-	  
-	  
+      // var url = "./imgFilter";
+  //     url += "&id=" + id;
 
-	  var currBlur = currImageList[n].blur
-	  var currBrightness = currImageList[n].brightness
-	  var currContrast = currImageList[n].contrast
-	  var currGrayscale = currImageList[n].grayscale
-	  var currHueRotate = currImageList[n].hueRotate
-	  var currInvert = currImageList[n].invert
-	  var currOpacity = currImageList[n].opacity
-	  var currSaturate = currImageList[n].saturate
-	  var currSepia = currImageList[n].sepia
+
+	  var currBlur = obj.blur
+	  var currBrightness = obj.brightness
+	  var currContrast = obj.contrast
+	  var currGrayscale = obj.grayscale
+	  var currHueRotate = obj.hueRotate
+	  var currInvert = obj.invert
+	  var currOpacity = obj.opacity
+	  var currSaturate = obj.saturate
+	  var currSepia = obj.sepia
 	  
-	  document.getElementById("blur").value = currBlur;
-	  document.getElementById("brightness").value = currBrightness;
- 	  document.getElementById("contrast").value = currContrast;
- 	  document.getElementById("grayscale").value = currGrayscale;
-	  document.getElementById("hueRotate").value = currHueRotate;
-	  document.getElementById("invert").value = currInvert;
-	  document.getElementById("opacity").value = currOpacity;
-	  document.getElementById("saturate").value = currSaturate;
-	  document.getElementById("sepia").value = currSepia;
+	  document.getElementById("blur").value = currBlur || "0";
+	  document.getElementById("brightness").value = currBrightness || "100";
+ 	  document.getElementById("contrast").value = currContrast || "100";
+ 	  document.getElementById("grayscale").value = currGrayscale || "0";
+	  document.getElementById("hueRotate").value = currHueRotate || "0";
+	  document.getElementById("invert").value = currInvert || "0";
+	  document.getElementById("opacity").value = currOpacity || "100";
+	  document.getElementById("saturate").value = currSaturate || "100";
+	  document.getElementById("sepia").value = currSepia || "0";
 	  
-      var filter = " blur(" + currBlur + ") ";
-      filter += " brightness(" + currBrightness + ") ";
-      filter += " contrast(" + currContrast + ") ";
-      filter += " grayscale(" + currGrayscale + ") ";
-      filter += " hue-rotate(" + currHueRotate + ") ";
-      filter += " invert(" + currInvert + ") ";
-      filter += " opacity(" + currOpacity + ") ";
-      filter += " saturate(" + currSaturate + ") ";
-      filter += " sepia(" + currSepia + ") ";
-      document.getElementById("theDetails").style.filter = filter;
-	  
+      // var filter = " blur(" + currBlur + ") ";
+//       filter += " brightness(" + currBrightness + ") ";
+//       filter += " contrast(" + currContrast + ") ";
+//       filter += " grayscale(" + currGrayscale + ") ";
+//       filter += " hue-rotate(" + currHueRotate + ") ";
+//       filter += " invert(" + currInvert + ") ";
+//       filter += " opacity(" + currOpacity + ") ";
+//       filter += " saturate(" + currSaturate + ") ";
+//       filter += " sepia(" + currSepia + ") ";
+//       document.getElementById("theDetails").style.filter = filter;
+
 	  applyFilter();
+	  
       }
   
   </script>
