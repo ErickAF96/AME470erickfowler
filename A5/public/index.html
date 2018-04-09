@@ -151,7 +151,9 @@
           ac.hide();
       });
     }
+	
 	var currSelection;
+	
     function imgSelected(n) {
       $("#theImageList button").removeClass("active");
       $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
@@ -164,7 +166,7 @@
       console.log(data);
       
 	  // saveFilter(n);
-      loadFilter(n);
+      loadFilter(n)
 	  
       markup += "<img src='" + thumbnail + "'>";
 	  $("#theDetails").html(markup);
@@ -222,14 +224,14 @@
 		var id = currImageList[n].id;
 	 	var blur = currImageList[n].blur
 		var url = "./imgFilter?id=" + id
-		+ "&blur=" + parseInt(blur);
-		+ "&brightness=" + parseInt(brightness);
-		+ "&contrast=" + parseInt(contrast);
-		+ "&grayscale=" + parseInt(grayscale);
-		+ "&hueRotate=" + parseInt(hueRotate);
-		+ "&invert=" + parseInt(invert);
-		+ "&opacity=" + parseInt(opacity);
-		+ "&saturate=" + parseInt(saturate);
+		+ "&blur=" + parseInt(blur)
+		+ "&brightness=" + parseInt(brightness)
+		+ "&contrast=" + parseInt(contrast)
+		+ "&grayscale=" + parseInt(grayscale)
+		+ "&hueRotate=" + parseInt(hueRotate)
+		+ "&invert=" + parseInt(invert)
+		+ "&opacity=" + parseInt(opacity)
+		+ "&saturate=" + parseInt(saturate)
 		+ "&sepia=" + parseInt(sepia);
 		
         loadFile(url, function(resData){
@@ -258,10 +260,10 @@
 	//
 	// }
 	
-	function loadFilter(n) {
+	function loadFilter() {
 		
-	  var obj = currImageList[n];
-      var id = currImageList[n].id;
+	  var n = currSelection;
+      var obj = currImageList[n];
       // var url = "./imgFilter";
   //     url += "&id=" + id;
 
