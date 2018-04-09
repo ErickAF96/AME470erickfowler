@@ -53,8 +53,8 @@ app.get("/renameImg", function (req, res) {
 });
 
 app.get("/imgFilter", function (req, res) {
-	var keys = Object.keys(data);
 	var data = req.query;
+	var keys = Object.keys(data);
 	var id = data.id;
 	
 	// var newBlur = data.blur;
@@ -73,7 +73,7 @@ app.get("/imgFilter", function (req, res) {
 	
     db.collection("img").findOne({id:id}, function(err, result){
 		
-		for(var i = 0; keys.length; i++){
+		for(var i = 0; i < keys.length; i++){
 			var key = keys[i];
 			result[key] = data[key];
 		}
