@@ -23,53 +23,6 @@ app.get("/getImage", function (req, res) {
 	  });
 });
 
-// app.get("/filterImg", function (req, res) {
-// 	var data = req.query;
-// 	var id = data.id;
-// 	var newFilter = data.filter
-// 	console.log(newBlur, id);
-//     db.collection("img").findOne({id:id}, function(err, result){
-//         result.filter = newFilter;
-//         db.collection("img").save(result, function(err){
-//           res.end("1");
-//         });
-// });
-// });
-
-app.get("/imgFilter", function (req, res) {
-	var data = req.query;
-	var id = data.id;
-	var newBlur = data.blur;
-	var newBrightness = data.brightness;
-	var newContrast = data.contrast;
-	var newGrayscale = data.grayscale;
-	var newHueRotate = data.hueRotate;
-	var newInvert = data.invert;
-	var newOpacity = data.opacity;
-	var newSaturate = data.saturate;
-	var newSepia = data.sepia;
-	
-	console.log(newBlur, id);
-	console.log(newBrightness, id);
-	console.log(newContrast, id);
-	
-    db.collection("img").findOne({id:id}, function(err, result){
-        result.blur = newBlur;
-		result.brightness = newBrightness;
-		result.contrast = newContrast;
-		result.grayscale = newGrayscale;
-		result.hueRotate = newHueRotate;
-		result.invert = newInvert;
-		result.opacity = newOpacity;
-		result.saturate = newSaturate;
-		result.sepia = newSepia;
-        db.collection("img").save(result, function(err){
-        res.end("1");
-        });
-});
- 
-});
-
 app.get("/getAllImgs", function (req, res) {
   db.collection('img').find().toArray(function(err, items) {
     console.log(err, items);
@@ -97,6 +50,49 @@ app.get("/renameImg", function (req, res) {
         res.end("1");
       });
   });
+});
+
+app.get("/imgFilter", function (req, res) {
+	var keys = Object.keys(data);
+	var data = req.query;
+	var id = data.id;
+	
+	// var newBlur = data.blur;
+// 	var newBrightness = data.brightness;
+// 	var newContrast = data.contrast;
+// 	var newGrayscale = data.grayscale;
+// 	var newHueRotate = data.hueRotate;
+// 	var newInvert = data.invert;
+// 	var newOpacity = data.opacity;
+// 	var newSaturate = data.saturate;
+// 	var newSepia = data.sepia;
+	
+	// console.log(newBlur, id);
+// 	console.log(newBrightness, id);
+// 	console.log(newContrast, id);
+	
+    db.collection("img").findOne({id:id}, function(err, result){
+		
+		for(var i = 0; keys.length; i++){
+			var key = keys[i];
+			result[key] = data[key];
+		}
+		
+        // result.blur = newBlur;
+// 		result.brightness = newBrightness;
+// 		result.contrast = newContrast;
+// 		result.grayscale = newGrayscale;
+// 		result.hueRotate = newHueRotate;
+// 		result.invert = newInvert;
+// 		result.opacity = newOpacity;
+// 		result.saturate = newSaturate;
+// 		result.sepia = newSepia;
+		
+        db.collection("img").save(result, function(err){
+        res.end("1");
+        });
+});
+ 
 });
 
 
