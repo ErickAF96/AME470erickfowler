@@ -10,6 +10,13 @@
 	  .hiddeninall {
 	        display: none;
 	      }
+		  
+      .initialView{ 
+			  display: flex;
+			  flex-direction: row;
+			  justify-content: space-evenly;
+			  max-width: 90%;
+		  }
 	   body {
 	        margin: 0px;
 	      }
@@ -19,11 +26,13 @@
 	          max-height: 25%;
 	        }
 	        #theImageList {
-	          width: 100%;
+				
 	          max-height: 30%;
 	        }
 	        .hiddeninSmall{
-	          display: block;
+			  display: flex;
+			  flex-direction: row;
+			  justify-content: space-evenly;
 	        }
 	        .hiddeninBig{
 	          display: none;
@@ -35,6 +44,7 @@
   			  justify-content: center;
   			  align-items: center;
   			  overflow: scroll;
+			  padding: 20px;
 	        }
 	      }
 	      @media (max-width: 500px){ /* small */
@@ -64,6 +74,7 @@
 			  justify-content: center;
 			  align-items: center;
 			  overflow: scroll;
+			  padding: 20px;
 		    }
 		}
 	  
@@ -110,8 +121,10 @@
 	
 	#theImageList .item {
 	    padding: 10px;
-	   /* display: grid;*/
+	    max-width: 15px;
+	    /* display: grid; */
 	    align-content: start;
+	    overflow: visible;
 	}
 	
 	#theImageList h1 {
@@ -132,9 +145,14 @@
 		font-weight: 100;
 	}
 
-    /*#theDetails {
-	  display: grid;
-    }*/
+    #theDetails img{
+	  max-width: 100%;
+    }
+	
+	#theInspector {
+		font-family: Helvetica, sans-serif;
+		}		
+	
 	
   </style>
   <script>
@@ -158,9 +176,10 @@
 		  }
 	   
 	  function goBackToList() {
-	     $("#theDetails").addClass("hiddeninSmall");
+	     $("#theDetails").addClass("hiddeninall");
 		 $("#theInspector").addClass("hiddeninall");
 	     $("#theImageList").removeClass("hiddeninSmall");
+		 $("#theImageList").addClass("initialView");
 		 backToAdd();
 	     // setTimeout(function(){$("#theList button").removeClass("active")}, 1000);
 	   }
@@ -210,6 +229,7 @@
   	
 	function start() {
       ac.show();
+	  $("#theImageList").addClass("initialView");
 	  $("#theDetails").addClass("hiddeninSmall");
 // 	  $("#theImageList").addClass("hiddeninall");
  	  $("#theInspector").addClass("hiddeninall");
@@ -240,6 +260,7 @@
 	
     function imgSelected(n) {
 	  addToBack();
+	  $("#theImageList").removeClass("initialView");
 	  $("#theImageList").addClass("hiddeninSmall");
       $("#theImageList button").removeClass("active");
       $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
