@@ -107,7 +107,6 @@
 		/*display: flex;*/
 		flex-wrap: wrap;
 	    align-content: space-between;
-		padding: 30px;
 	}
 	
 	#theImageList button {
@@ -121,8 +120,8 @@
 	
 	#theImageList .item {
 	    padding: 10px;
-	    max-width: 15px;
-	    /* display: grid; */
+	    max-width: 100px;
+		display: grid; 
 	    align-content: start;
 	    overflow: visible;
 	}
@@ -166,8 +165,13 @@
 // 	   }
 
 	  function addToBack () {
+		  if($(window).width() <= 500) {
 		  $("#add").removeAttr("onclick");
 		  $("#add").html("<button onclick='goBackToList()'> Back </button>");
+	  }
+	  else {
+	  	
+	  }
 	      }
 		  
 	   function backToAdd () {
@@ -176,7 +180,7 @@
 		  }
 	   
 	  function goBackToList() {
-	     $("#theDetails").addClass("hiddeninall");
+	     $("#theDetails").addClass("hiddeninSmall");
 		 $("#theInspector").addClass("hiddeninall");
 	     $("#theImageList").removeClass("hiddeninSmall");
 		 $("#theImageList").addClass("initialView");
@@ -232,7 +236,7 @@
 	  $("#theImageList").addClass("initialView");
 	  $("#theDetails").addClass("hiddeninSmall");
 // 	  $("#theImageList").addClass("hiddeninall");
- 	  $("#theInspector").addClass("hiddeninall");
+ 	  // $("#theInspector").addClass("hiddeninall");
       var url = "./getAllImgs";
       loadFile(url, function(resData){
         console.log(resData);
@@ -389,7 +393,7 @@
 	  
   <div id='theDetails'></div>
 	  
-  <div id='theInspector'>
+  <div id='theInspector' class='hiddeninall'>
 	<br>
 	  <label for='blur'> Blur </label>
 	  <input onchange='applyFilter()' id='blur' value="0" type="range" min="0" max="100">
