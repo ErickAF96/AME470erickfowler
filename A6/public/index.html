@@ -11,7 +11,7 @@
 	        display: none;
 	      }
 		  
-      .initialView{ 
+      .initialView { 
 			  display: flex;
 			  flex-direction: row;
 			  justify-content: space-evenly;
@@ -21,40 +21,32 @@
 	        margin: 0px;
 	      }
 	   @media (min-width: 500px) { /* big */
-	        #allImagesWrapper {
-	          width: 100%;
-	          max-height: 25%;
-	        }
+	        
 	        #theImageList {
-				
 	          max-height: 30%;
 	        }
-	        .hiddeninSmall{
+	        .hiddeninSmall {
 			  display: flex;
 			  flex-direction: row;
 			  justify-content: space-evenly;
 	        }
-	        .hiddeninBig{
+	        .hiddeninBig {
 	          display: none;
 	        }
-	        #theDetails{
-  		      max-width: 100%;
+	        #theDetails {
   		  	  font-family:helvetica, sans-serif;
-  			  contain: content;
-  			  justify-content: center;
+  			  contain: auto;
+  			  justify-content: space-evenly;
   			  align-items: center;
   			  overflow: scroll;
 			  padding: 20px;
 	        }
 	      }
 	      @media (max-width: 500px){ /* small */
-  	        #allImagesWrapper {
-  	          width: 100%;
-  	          max-height: 100%;
-  	        }
+			  
   	        #theImageList {
   	          width: 100%;
-  	          max-height: 100%;
+  	          max-height: 75%;
 			  overflow: scroll;
 			 /* display: flex;*/
   	        }
@@ -66,12 +58,10 @@
 	          margin: 10px;
 	        }
 		    #theDetails {
-			  /*display: grid;*/
-		      max-width: 100%;
 		  	  font-family:helvetica, sans-serif;
 			  max-height: 50%;
 			  contain: content;
-			  justify-content: center;
+			  justify-content: space-evenly;
 			  align-items: center;
 			  overflow: scroll;
 			  padding: 20px;
@@ -103,8 +93,6 @@
 	}
 	
 	#theImageList {
-		height: 30%;
-		/*display: flex;*/
 		flex-wrap: wrap;
 	    align-content: space-between;
 	}
@@ -123,7 +111,7 @@
 	    max-width: 100px;
 		display: grid; 
 	    align-content: start;
-	    overflow: visible;
+	    overflow: inherit;
 	}
 	
 	#theImageList h1 {
@@ -144,8 +132,9 @@
 		font-weight: 100;
 	}
 
-    #theDetails img{
+    #theDetails img {
 	  max-width: 100%;
+	  max-height: 50%;
     }
 	
 	#theInspector {
@@ -157,27 +146,18 @@
   <script>
 	  
 	  var currImage = null;
-	  
-	  // function goBackToMain() {
-// 	     $("#allImagesWrapper").removeClass("hiddeninSmall");
-// 		 $("#theDetails").addClass("hiddeninSmall");
-// 	     // setTimeout(function(){$("#theFeedList .item").removeClass("active")}, 1000);
-// 	   }
 
 	  function addToBack () {
 		  if($(window).width() <= 500) {
 		  $("#add").removeAttr("onclick");
 		  $("#add").html("<button onclick='goBackToList()'> Back </button>");
+	  	}
 	  }
-	  else {
-	  	
-	  }
-	      }
 		  
-	   function backToAdd () {
+	  function backToAdd () {
 		  $("#add").removeAttr("onclick");
 		  $("#add").html("<button onclick='addImgSrc()'> Add </button>");
-		  }
+	  }
 	   
 	  function goBackToList() {
 	     $("#theDetails").addClass("hiddeninSmall");
@@ -185,7 +165,6 @@
 	     $("#theImageList").removeClass("hiddeninSmall");
 		 $("#theImageList").addClass("initialView");
 		 backToAdd();
-	     // setTimeout(function(){$("#theList button").removeClass("active")}, 1000);
 	   }
 	  
 	  function renameClicked(n){
@@ -205,7 +184,7 @@
 	    function deleteClicked(n){
 			var id = currImageList[n].id;
 			var x = confirm("Delete Image?");
-			if(x){
+			if(x) {
 				var url = "./deleteImg?id=" + id;
 				loadFile(url, function(resData){
 	            start();
@@ -220,23 +199,21 @@
 			});
 		}
 	
-    function addImgSrc() {
-      var imageURL = prompt("Enter new image URL:");
-      var url = "./addImg?url=" + imageURL;
-      url += "&date=" + new Date().getTime();
-      url += "&name=Untitled";
-      url += "&id=test" + new Date().getTime();
-      loadFile(url, function(resData){
+    	function addImgSrc() {
+     	    var imageURL = prompt("Enter new image URL:");
+     	    var url = "./addImg?url=" + imageURL;
+     	    url += "&date=" + new Date().getTime();
+      	  	url += "&name=Untitled";
+       	 	url += "&id=test" + new Date().getTime();
+      	  loadFile(url, function(resData){
           start();
-      });
-    }
+      	  });
+    	}
   	
 	function start() {
       ac.show();
 	  $("#theImageList").addClass("initialView");
 	  $("#theDetails").addClass("hiddeninSmall");
-// 	  $("#theImageList").addClass("hiddeninall");
- 	  // $("#theInspector").addClass("hiddeninall");
       var url = "./getAllImgs";
       loadFile(url, function(resData){
         console.log(resData);
@@ -261,7 +238,7 @@
     }
 	
 	var currSelection;
-	
+
     function imgSelected(n) {
 	  addToBack();
 	  $("#theImageList").removeClass("initialView");
@@ -294,6 +271,7 @@
         document.getElementById("opacity").value = "100";
         document.getElementById("saturate").value = "100";
         document.getElementById("sepia").value = "0";
+		
         applyFilter();
   }
 	
