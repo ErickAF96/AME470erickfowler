@@ -1,0 +1,479 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scale=0, max-width=1.0">
+  <script src='asyncReq.js'></script>
+  <script src='jquery-3.3.1.min.js'></script>
+  <script src='ac.js'></script>
+  <link rel="stylesheet" type="text/css" href="ac.css">
+  <style>
+	
+	  .hiddeninall {
+	        display: none;
+	      }
+		  
+      .initialView { 
+			  display: flex;
+			  flex-direction: row;
+			  justify-content: space-evenly;
+			  max-width: 90%;
+		  }
+	   body {
+	        margin: 0px;
+	      }
+	   @media (min-width: 500px) { /* big */
+	        
+	        #theImageList {
+	          max-height: 30%;
+	        }
+	        .hiddeninSmall {
+			  display: flex;
+			  flex-direction: row;
+			  justify-content: space-evenly;
+	        }
+	        .hiddeninBig {
+	          display: none;
+	        }
+	        #theDetails {
+  		  	  font-family:helvetica, sans-serif;
+  			  contain: auto;
+  			  justify-content: space-evenly;
+  			  align-items: center;
+  			  overflow: scroll;
+			  padding: 20px;
+	        }
+	      }
+	      @media (max-width: 500px){ /* small */
+			  
+  	        #theImageList {
+  	          width: 100%;
+  	          max-height: 75%;
+			  overflow: scroll;
+  	        }
+	        .hiddeninSmall{
+	          display: none;
+	        }
+	        .hiddeninBig{
+	          display: block;
+	          margin: 10px;
+	        }
+		    #theDetails {
+		  	  font-family:helvetica, sans-serif;
+			  max-height: 50%;
+			  contain: content;
+			  justify-content: space-evenly;
+			  align-items: center;
+			  overflow: scroll;
+			  padding: 20px;
+		    }
+		}
+	  
+	  
+	  
+    #allImagesWrapper {
+	  display: flex;
+	  text-align: center;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-family: Helvetica, sans-serif;
+      float: center;
+      width: 100%;
+      height: 25%;
+      background: bisque;	
+    }
+	
+	#allImagesWrapper button {
+		background-color: paleturquoise;
+		border-radius: 8px;
+		cursor: pointer;
+		border: none;
+		font-weight: bold;
+		font-size: 16px;
+	}
+	
+	// #allImagesWrapper input {
+	// 	padding-left: 60px;
+	// }
+	
+	#theImageList {
+		flex-wrap: wrap;
+	    align-content: space-between;
+	}
+	
+	#theImageList button {
+		background: transparent;
+		border: transparent;
+		align-content: left;
+		text-align: left;
+		width:150px;
+		height:150px;
+	}
+	
+	#theImageList .item {
+	    padding: 10px;
+	    max-width: 100px;
+		display: grid; 
+	    align-content: start;
+	    overflow: unset;
+	}
+	
+	#theImageList h1 {
+		font-size: 14px;
+		font-weight: 100;
+	}
+	
+	#theImageList img {
+		border-radius: 8px;
+		height:100px;
+		width:100px;
+	}
+	
+	#theImageList a {
+		color: black;
+		font-family: Helvetica, sans-serif;
+		font-size: 10px;
+		font-weight: 100;
+	}
+
+    #theDetails img {
+	  max-width: 100%;
+	  max-height: 50%;
+    }
+	
+	#theInspector {
+		font-family: Helvetica, sans-serif;
+		}		
+	
+	
+  </style>
+  <script>
+	  
+	  var currImage = null;
+	  
+	  var fileUploaded = function() {
+	     var file = $('#theFileUploader').get(0);
+	     var fileObj = $('#theFileUploader').get(0).files[0]
+	     var filename = fileObj.name;
+	     var ext = filename.split(".");
+	     ext = ext[ext.length-1];
+	     console.log(ext);
+	     var fd = new FormData();
+	     var fileInput = "s3Upload_" + new Date().getTime().toString() + "." + ext;
+	     fd.append('fileInput', fileInput);
+	     fd.append('input', file.files[0]);
+	     fd.append('date', (new Date()).toString());
+	      //fd.append('data', data);
+	      var xhr = new XMLHttpRequest();
+	      xhr.onreadystatechange = function(e) {  
+	        if (xhr.readyState != 4) { return; }
+	          // callback logic
+			  // add image 
+			var fileURL = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput;
+     	    // var imageURL = prompt("Enter new image URL:");
+     	    var url = "./addImg?url=" + fileURL;
+     	    url += "&date=" + new Date().getTime();
+      	  	url += "&name=Untitled";
+       	 	url += "&id=test" + new Date().getTime();
+      	  loadFile(url, function(resData){
+		  // fileUploaded();
+		  start();
+		  
+      	  });
+	         // document.getElementById("preview").src = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput;
+	      };
+	      xhr.open("POST", "/uploadFile", true);
+	      xhr.send(fd);
+	  }
+	  
+	  // function saveImageEdit(){
+// 	    if(sessionStorage.getItem("isEdited") == "true"){
+// 	       var fd = new FormData();
+// 	       var fileInput = document.getElementById("preview").src.split("ame4702018erickfowler/")[1];
+// 	       fileInput = fileInput.split("?")[0];
+// 	       fd.append('fileInput', fileInput);
+// 	       fd.append('date', (new Date()).toString());
+// 	       fd.append('data', sessionStorage.getItem("editedImage"));
+// 	        //fd.append('data', data);
+// 	        var xhr = new XMLHttpRequest();
+// 	        xhr.onreadystatechange = function(e) {
+// 	          cancelImageEdit();
+// 	          if (xhr.readyState != 4) { return; }
+// 	            // callback logic
+// 	          document.getElementById("preview").src = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput + "?t=" + new Date().getTime();
+// 	        };
+// 	        xhr.open("POST", "/uploadImage", true);
+// 	        xhr.send(fd);
+// 	    }
+// 	  }
+//
+// 	  function cancelImageEdit() {
+// 	    document.getElementById("DRFrame").src = "";
+// 	    document.getElementById("editWrapper").style.display = "none";
+// 	  }
+// 	  function editImage(){
+// 	    var url = document.getElementById("preview").src;
+// 	    document.getElementById("DRFrame").src = "./demo/index.html#" + url;
+// 	    document.getElementById("editWrapper").style.display = "block";
+// 	    sessionStorage.setItem("isEdited", "false");
+// 	  }
+
+	  function addToBack () {
+		  if($(window).width() <= 500) {
+		  $("#add").removeAttr("onclick");
+		  $("#add").html("<button onclick='goBackToList()'> Back </button>");
+	  	}
+	  }
+		  
+	  function backToAdd () {
+		  $("#add").removeAttr("onclick");
+		  $("#add").html("<button onclick='addImgSrc()'> Add </button>");
+	  }
+	   
+	  function goBackToList() {
+	     $("#theDetails").addClass("hiddeninSmall");
+		 $("#theInspector").addClass("hiddeninall");
+	     $("#theImageList").removeClass("hiddeninSmall");
+		 $("#theImageList").addClass("initialView");
+		 backToAdd();
+	   }
+	  
+	  function renameClicked(n){
+		  var currName = currImageList[n].name;
+	      var id = currImageList[n].id;
+	      var x = prompt("Rename Image", currName);
+	      console.log(x);
+	      if(x) {
+	        var url = "./renameImg?name=" + encodeURIComponent(x);
+	        url += "&id=" + id;
+	        loadFile(url, function(resData){
+	            start();
+	        });
+	      }
+	    }
+		
+	    function deleteClicked(n){
+			var id = currImageList[n].id;
+			var x = confirm("Delete Image?");
+			if(x) {
+				var url = "./deleteImg?id=" + id;
+				loadFile(url, function(resData){
+	            start();
+	        	});
+	      	}
+	    }
+		
+		function getDataFromServer() {
+			var url = "";
+			loadFile(url, function(resData){
+				$("#result").val(resData);
+			});
+		}
+	
+    	function addImgSrc() {
+     	    var imageURL = prompt("Enter new image URL:");
+     	    var url = "./addImg?url=" + imageURL;
+     	    url += "&date=" + new Date().getTime();
+      	  	url += "&name=Untitled";
+       	 	url += "&id=test" + new Date().getTime();
+      	  loadFile(url, function(resData){
+		  // fileUploaded();
+		  start();
+      	  });
+    	}
+  	
+	function start() {
+      ac.show();
+	  $("#theImageList").addClass("initialView");
+	  $("#theDetails").addClass("hiddeninSmall");
+      var url = "./getAllImgs";
+      loadFile(url, function(resData){
+        console.log(resData);
+         var allImages = JSON.parse(resData);
+         currImageList = allImages;
+          if(allImages.length == 0){
+            document.getElementById("theImageList").innerHTML = "No images yet! Add some to start!!"
+          }
+          else{
+            var markup = "";
+            for(var i = 0; i < allImages.length; i++){
+              markup += "<div class='item'>";
+                markup += "<button onclick='imgSelected(" + i + ")'><img src='" + allImages[i].url + "'><h1>" + allImages[i].name + "</h1></button>";
+                markup += '<a href="javascript:renameClicked(' + i + ')"> Rename </a>';
+                markup += '<a href="javascript:deleteClicked(' + i + ')"> Delete </a>';
+                markup += "</div>";
+            }
+            $("#theImageList").html(markup);
+          }     
+          ac.hide();
+      });
+    }
+	
+	var currSelection;
+
+    function imgSelected(n) {
+	  addToBack();
+	  $("#theImageList").removeClass("initialView");
+	  $("#theImageList").addClass("hiddeninSmall");
+      $("#theImageList button").removeClass("active");
+      $("#theImageList button:nth-of-type(" + (n+1) + ")").addClass("active");
+	  currSelection = n;
+      var data = currImageList[n];
+      var markup = "";
+      var thumbnail = data.url || "";
+      var imageURL = data.name || "";
+	  var url = "./getImage?url=" + imageURL;
+      console.log(data);
+      
+      loadFilter(n)
+	  
+      markup += "<img src='" + thumbnail + "'>";
+	  $("#theDetails").html(markup);
+	  $("#theDetails").removeClass("hiddeninSmall");
+	  $("#theInspector").removeClass("hiddeninall");
+    }
+	
+	function resetFilters() {
+        document.getElementById("blur").value = "0";
+        document.getElementById("brightness").value = "100";
+        document.getElementById("contrast").value = "100";
+        document.getElementById("grayscale").value = "0";
+        document.getElementById("hueRotate").value = "0";
+        document.getElementById("invert").value = "0";
+        document.getElementById("opacity").value = "100";
+        document.getElementById("saturate").value = "100";
+        document.getElementById("sepia").value = "0";
+		
+        applyFilter();
+  }
+	
+	function applyFilter() {
+		
+        var blur = document.getElementById("blur").value + "px";
+        var brightness = document.getElementById("brightness").value + "%";
+        var contrast = document.getElementById("contrast").value + "%";
+        var grayscale = document.getElementById("grayscale").value + "%";
+        var hueRotate = document.getElementById("hueRotate").value + "deg";
+        var invert = document.getElementById("invert").value + "%";
+        var opacity = document.getElementById("opacity").value + "%";
+        var saturate = document.getElementById("saturate").value + "%";
+        var sepia = document.getElementById("sepia").value + "%";
+		
+		
+        var filter = " blur(" + blur + ") ";
+        filter += " brightness(" + brightness + ") ";
+        filter += " contrast(" + contrast + ") ";
+        filter += " grayscale(" + grayscale + ") ";
+        filter += " hue-rotate(" + hueRotate + ") ";
+        filter += " invert(" + invert + ") ";
+        filter += " opacity(" + opacity + ") ";
+        filter += " saturate(" + saturate + ") ";
+        filter += " sepia(" + sepia + ") ";
+        document.getElementById("theDetails").style.filter = filter;
+		
+		var n = currSelection;
+		
+		currImageList[n].blur = parseInt(blur);
+		currImageList[n].brightness = parseInt(brightness);
+		currImageList[n].contrast = parseInt(contrast);
+		currImageList[n].grayscale = parseInt(grayscale);
+		currImageList[n].hueRotate = parseInt(hueRotate);
+		currImageList[n].invert = parseInt(invert);
+		currImageList[n].opacity = parseInt(opacity);
+		currImageList[n].saturate = parseInt(saturate);
+		currImageList[n].sepia = parseInt(sepia);
+		
+		var id = currImageList[n].id;
+	 	var blur = currImageList[n].blur
+		var url = "./imgFilter?id=" + id
+		+ "&blur=" + parseInt(blur)
+		+ "&brightness=" + parseInt(brightness)
+		+ "&contrast=" + parseInt(contrast)
+		+ "&grayscale=" + parseInt(grayscale)
+		+ "&hueRotate=" + parseInt(hueRotate)
+		+ "&invert=" + parseInt(invert)
+		+ "&opacity=" + parseInt(opacity)
+		+ "&saturate=" + parseInt(saturate)
+		+ "&sepia=" + parseInt(sepia);
+		
+        loadFile(url, function(resData){
+          
+        }); 
+    }
+	
+	function loadFilter() {
+		
+	  var n = currSelection;
+      var obj = currImageList[n];
+
+	  var currBlur = obj.blur
+	  var currBrightness = obj.brightness
+	  var currContrast = obj.contrast
+	  var currGrayscale = obj.grayscale
+	  var currHueRotate = obj.hueRotate
+	  var currInvert = obj.invert
+	  var currOpacity = obj.opacity
+	  var currSaturate = obj.saturate
+	  var currSepia = obj.sepia
+	  
+	  document.getElementById("blur").value = currBlur || "0";
+	  document.getElementById("brightness").value = currBrightness || "100";
+ 	  document.getElementById("contrast").value = currContrast || "100";
+ 	  document.getElementById("grayscale").value = currGrayscale || "0";
+	  document.getElementById("hueRotate").value = currHueRotate || "0";
+	  document.getElementById("invert").value = currInvert || "0";
+	  document.getElementById("opacity").value = currOpacity || "100";
+	  document.getElementById("saturate").value = currSaturate || "100";
+	  document.getElementById("sepia").value = currSepia || "0";
+	  
+	  applyFilter();
+	  
+      }
+  
+  </script>
+  </head>
+  
+  <body onload='start()'>
+  <div id='allImagesWrapper'>
+  	<h1> Image Viewer </h1>
+    	<button onclick='addImgSrc()'id = 'add'> Add </button>
+	   <br>
+	    <input type='file' id='theFileUploader' onchange='fileUploaded()'>
+  </div>
+
+  <div id='theImageList'></div>
+	  
+  <div id='theDetails'></div>
+	  
+  <div id='theInspector' class='hiddeninall'>
+	<br>
+	  <label for='blur'> Blur </label>
+	  <input onchange='applyFilter()' id='blur' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='brightness'> Brightness </label>
+	  <input onchange='applyFilter()' id='brightness' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='contrast'> Contrast </label>
+	  <input onchange='applyFilter()' id='contrast' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='grayscale'> Grayscale</label>
+	  <input onchange='applyFilter()' id='grayscale' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='hueRotate'> Hue Rotate</label>
+	  <input onchange='applyFilter()' id='hueRotate' value="0" type="range" min="0" max="360">
+	  <br>
+	  <label for='invert'> Invert </label>
+	  <input onchange='applyFilter()' id='invert' value="0" type="range" min="0" max="100">
+	  <br>
+	  <label for='opacity'> Opacity </label>
+	  <input onchange='applyFilter()' id='opacity' value="100" type="range" min="0" max="100">
+	  <br>
+	  <label for='saturate'> Saturate</label>
+	  <input onchange='applyFilter()' id='saturate' value="100" type="range" min="0" max="500">
+	  <br>
+	  <label for='sepia'> Sepia </label>
+	  <input onchange='applyFilter()' id='sepia' value="0" type="range" min="0" max="100">
+	  <button onclick='resetFilters()'> Reset </button>
+  </div>
+
+  </body>
+  </html>
