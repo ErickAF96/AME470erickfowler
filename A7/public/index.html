@@ -171,6 +171,7 @@
        	 	url += "&id=test" + new Date().getTime();
       	  loadFile(url, function(resData){
 		  start();
+		  addToBack();
       	  });
 	      };
 	      xhr.open("POST", "/uploadFile", true);
@@ -181,12 +182,14 @@
 		  if($(window).width() <= 500) {
 		  $("#add").removeAttr("onclick");
 		  $("#add").html("<button onclick='goBackToList()'> Back </button>");
+		  $("#theFileUploader").addClass("hiddeninSmall");
 	  	}
 	  }
 		  
 	  function backToAdd () {
 		  $("#add").removeAttr("onclick");
 		  $("#add").html("<button onclick='addImgSrc()'> Add </button>");
+		  $("#theFileUploader").removeClass("hiddeninSmall");
 	  }
 	   
 	  function goBackToList() {
