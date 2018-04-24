@@ -91,10 +91,6 @@
 		font-size: 16px;
 	}
 	
-	// #allImagesWrapper input {
-	// 	padding-left: 60px;
-	// }
-	
 	#theImageList {
 		flex-wrap: wrap;
 	    align-content: space-between;
@@ -169,53 +165,17 @@
 	          // callback logic
 			  // add image 
 			var fileURL = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput;
-     	    // var imageURL = prompt("Enter new image URL:");
      	    var url = "./addImg?url=" + fileURL;
      	    url += "&date=" + new Date().getTime();
       	  	url += "&name=Untitled";
        	 	url += "&id=test" + new Date().getTime();
       	  loadFile(url, function(resData){
-		  // fileUploaded();
 		  start();
-		  
       	  });
-	         // document.getElementById("preview").src = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput;
 	      };
 	      xhr.open("POST", "/uploadFile", true);
 	      xhr.send(fd);
 	  }
-	  
-	  // function saveImageEdit(){
-// 	    if(sessionStorage.getItem("isEdited") == "true"){
-// 	       var fd = new FormData();
-// 	       var fileInput = document.getElementById("preview").src.split("ame4702018erickfowler/")[1];
-// 	       fileInput = fileInput.split("?")[0];
-// 	       fd.append('fileInput', fileInput);
-// 	       fd.append('date', (new Date()).toString());
-// 	       fd.append('data', sessionStorage.getItem("editedImage"));
-// 	        //fd.append('data', data);
-// 	        var xhr = new XMLHttpRequest();
-// 	        xhr.onreadystatechange = function(e) {
-// 	          cancelImageEdit();
-// 	          if (xhr.readyState != 4) { return; }
-// 	            // callback logic
-// 	          document.getElementById("preview").src = "https://s3.amazonaws.com/ame4702018erickfowler/" + fileInput + "?t=" + new Date().getTime();
-// 	        };
-// 	        xhr.open("POST", "/uploadImage", true);
-// 	        xhr.send(fd);
-// 	    }
-// 	  }
-//
-// 	  function cancelImageEdit() {
-// 	    document.getElementById("DRFrame").src = "";
-// 	    document.getElementById("editWrapper").style.display = "none";
-// 	  }
-// 	  function editImage(){
-// 	    var url = document.getElementById("preview").src;
-// 	    document.getElementById("DRFrame").src = "./demo/index.html#" + url;
-// 	    document.getElementById("editWrapper").style.display = "block";
-// 	    sessionStorage.setItem("isEdited", "false");
-// 	  }
 
 	  function addToBack () {
 		  if($(window).width() <= 500) {
