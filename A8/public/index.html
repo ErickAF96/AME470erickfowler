@@ -228,6 +228,7 @@
 	  function goBackToList() {
 	     $("#theDetails").addClass("hiddeninSmall");
 		 $("#theInspector").addClass("hiddeninall");
+		 $("#theInspectorShow").addClass("hiddeninall");
 	     $("#theImageList").removeClass("hiddeninSmall");
 		 $("#theImageList").addClass("initialView");
 		 backToAdd();
@@ -326,6 +327,7 @@
 	  $("#theDetails").html(markup);
 	  $("#theDetails").removeClass("hiddeninSmall");
 	  $("#theInspectorShow").removeClass("hiddeninall");
+	  hideInspector();
     }
 	
 	function resetFilters() {
