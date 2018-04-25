@@ -137,6 +137,10 @@
     }
 	
 	#theInspector {
+		position: fixed;
+    		top: 50%;
+    		left: 40%;
+    		float: left;
 		font-family: Helvetica, sans-serif;
 		}		
 	
@@ -161,6 +165,7 @@
 	  function goBackToList() {
 	     $("#theDetails").addClass("hiddeninSmall");
 		 $("#theInspector").addClass("hiddeninall");
+	     $("#theInspectorShow").addClass("hiddeninall");
 	     $("#theImageList").removeClass("hiddeninSmall");
 		 $("#theImageList").addClass("initialView");
 		 backToAdd();
@@ -257,7 +262,8 @@
       markup += "<img src='" + thumbnail + "'>";
 	  $("#theDetails").html(markup);
 	  $("#theDetails").removeClass("hiddeninSmall");
-	  $("#theInspector").removeClass("hiddeninall");
+	  $("#theInspectorShow").removeClass("hiddeninall");
+	  hideInspector();
     }
 	
 	function resetFilters() {
@@ -356,7 +362,20 @@
 	  applyFilter();
 	  
       }
-  
+  	  
+	  function hideInspector() {
+	    $("#theInspector").addClass("hiddeninall");
+	    $("#Edit").removeAttr("onclick");
+	    $("#Edit").html("<button onclick='showInspector()'> Edit </button>");
+		
+	  }
+	  
+	  function showInspector() {
+	    $("#theInspector").removeClass("hiddeninall");
+	    $("#Edit").removeAttr("onclick");
+	    $("#Edit").html("<button onclick='hideInspector()'> Hide </button>");
+		
+	  }
   </script>
   </head>
   
@@ -369,6 +388,10 @@
   <div id='theImageList'></div>
 	  
   <div id='theDetails'></div>
+	  
+  <div id='theInspectorShow' class='hiddeninall'>
+  <button onclick='showInspector()' id = 'Edit'> Edit </button>  
+  </div>  
 	  
   <div id='theInspector' class='hiddeninall'>
 	<br>
